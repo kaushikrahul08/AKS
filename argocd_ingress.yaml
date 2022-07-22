@@ -1,0 +1,29 @@
+# Source: cje-trackmanagement/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-Ingress
+  labels:
+    helm.sh/chart: cje-trackmanagement-0.1.0
+    app.kubernetes.io/name: cje-trackmanagement
+    app.kubernetes.io/instance: cje-trackmanagement
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/ssl-passthrough: "false"
+spec:
+  rules:
+    - host: "cjeargocddev.svcs.teksystems.com"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  number: 80
