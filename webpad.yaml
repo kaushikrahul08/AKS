@@ -1,0 +1,49 @@
+# Source: cje-mvp/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cje-mvp
+  labels:
+    helm.sh/chart: cje-mvp-0.1.0
+    app.kubernetes.io/name: cje-mvp
+    app.kubernetes.io/instance: cje-mvp
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cje-mvp
+      app.kubernetes.io/instance: cje-mvp
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cje-mvp
+        app.kubernetes.io/instance: cje-mvp
+    spec:
+      serviceAccountName: cje-mvp
+      securityContext:
+        {}
+      containers:
+        - name: cje-mvp
+          securityContext:
+            {}
+          image: "cjmacrdev.azurecr.io/dev/cje-mvp:39311"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: REACT_APP_API_BASE_URL
+              value: 'cjevmvpdev.svcs.teksystems.com'
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            null
